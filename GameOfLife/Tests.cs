@@ -32,6 +32,18 @@ public class Tests
         
         Assert.That(grid.IsAliveAt(column, row), Is.True);
     }
+    
+    [TestCase(-1, 0)]
+    [TestCase(0, -1)]
+    [TestCase(-1, -1)]
+    [TestCase(3, 0)]
+    [TestCase(0, 3)]
+    [TestCase(3, 3)]
+    public void When_checking_is_cell_alive_and_it_is_outside_the_grid_bounds(int column, int row)
+    {
+        var grid = new Grid(3, 3);
+        Assert.That(grid.IsAliveAt(column, row), Is.False);
+    }
 
     [Test]
     public void When_setting_live_cells_from_coordinates()
@@ -77,6 +89,35 @@ public class Tests
 
         var result = grid.NextGeneration();
 
+        Assert.That(result.IsAliveAt(1, 1), Is.False);
+    }
+
+    [TestCase("0,0;0,2")]
+    [TestCase("0,0;0,1")]
+    [TestCase("1,0;2,2")]
+    [TestCase("1,0;2,2;2,1")]
+    public void When_a_live_cell_has_two_or_three_neighbors_it_lives(string neighbors)
+    {
+        var grid = new Grid(3, 3);
+        grid.SetLiveCell(1, 1);
+        SetLiveCellsFromStringCoordinates(grid, neighbors);
+
+        var result = grid.NextGeneration();
+        
+        Assert.That(result.IsAliveAt(1, 1), Is.True);
+    }
+
+    [TestCase("0,0;0,2")]
+    [TestCase("0,0;0,1")]
+    [TestCase("1,0;2,2")]
+    [TestCase("1,0;2,2;2,1")]
+    public void When_a_dead_cell_has_two_or_three_neighbors_it_stays_dead(string neighbors)
+    {
+        var grid = new Grid(3, 3);
+        SetLiveCellsFromStringCoordinates(grid, neighbors);
+
+        var result = grid.NextGeneration();
+        
         Assert.That(result.IsAliveAt(1, 1), Is.False);
     }
 }
