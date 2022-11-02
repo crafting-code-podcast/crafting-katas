@@ -111,9 +111,9 @@ public class GridTests
         Assert.That(result.IsAliveAt(1, 1), Is.False);
     }
 
-    [TestCase("X..\nXX.\nX..\n")]
-    [TestCase("..X\nXX.\n..X\n")]
-    [TestCase(".X.\nXX.\n..X\n")]
+    [TestCase("X..\nX..\nX..\n")]
+    [TestCase("..X\nX..\n..X\n")]
+    [TestCase(".X.\nX..\n..X\n")]
     public void When_a_dead_cell_has_exactly_3_live_neighbors_it_lives(string input)
     {
         var grid = new Grid(input);
