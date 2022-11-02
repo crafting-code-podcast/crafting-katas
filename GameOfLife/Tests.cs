@@ -120,4 +120,17 @@ public class Tests
         
         Assert.That(result.IsAliveAt(1, 1), Is.False);
     }
+    
+    [TestCase("1,0;2,2;2,1;0,0")]
+    [TestCase("0,0;0,1;0,2;1,0")]
+    public void When_a_live_cell_has_more_than_three_neighbors_it_dies(string neighbors)
+    {
+        var grid = new Grid(3, 3);
+        grid.SetLiveCell(1, 1);
+        SetLiveCellsFromStringCoordinates(grid, neighbors);
+
+        var result = grid.NextGeneration();
+        
+        Assert.That(result.IsAliveAt(1, 1), Is.False);
+    }
 }
