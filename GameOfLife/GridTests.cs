@@ -2,7 +2,7 @@ using NUnit.Framework;
 
 namespace GameOfLife;
 
-public class Tests
+public class GridTests
 {
     [Test]
     public void When_creating_a_fixed_size_grid_of_cells()
