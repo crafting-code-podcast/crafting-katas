@@ -5,25 +5,24 @@ namespace GameOfLife;
 
 public class Grid
 {
-    private bool[,] cells;
+    private readonly int columns;
+    private readonly int rows;
+    private readonly bool[,] cells;
     
     public Grid(int columns, int rows)
     {
+        this.columns = columns;
+        this.rows = rows;
         cells = new bool[columns, rows];
     }
 
     public bool IsAliveAt(int column, int row)
     {
-        if (column < 0 || column >= cells.GetLength(0))
+        if (column < 0 || column >= columns || row < 0 || row >= rows)
         {
             return false;
         }
 
-        if (row < 0 || row >= cells.GetLength(1))
-        {
-            return false;
-        }
-        
         return cells[column, row];
     }
 
@@ -34,8 +33,6 @@ public class Grid
 
     public Grid NextGeneration()
     {
-        var columns = cells.GetLength(0);
-        var rows = cells.GetLength(1);
         var next = new Grid(columns, rows);
         for (var row = 0; row < rows; row++)
         {
@@ -51,16 +48,16 @@ public class Grid
     private bool WillLiveAt(int column, int row)
     {
         var liveNeighbors = CountLiveNeighbors(column, row);
-        if (IsAliveAt(column, row) && (liveNeighbors == 2 || liveNeighbors == 3))
-        {
-            return true;
-        }
-
-        if (!IsAliveAt(column, row) && liveNeighbors == 3)
+        if (liveNeighbors == 3)
         {
             return true;
         }
         
+        if (IsAliveAt(column, row) && liveNeighbors == 2)
+        {
+            return true;
+        }
+
         return false;
     }
 
