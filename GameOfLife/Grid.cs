@@ -24,19 +24,23 @@ public class Grid
         rows = rowData.Length;
         columns = rowData[0].Length;
         cells = new bool[columns, rows];
+        ForEveryCell((column, row) => cells[column, row] = rowData[row][column] == 'X');
+    }
 
-        Console.WriteLine(input);
-
+    private void ForEveryCellAndRow(Action<int, int> cellAction, Action endOfRowAction)
+    {
         for (var row = 0; row < rows; row++)
         {
-            Console.WriteLine($"row {row}: {rowData[row]}");
             for (var column = 0; column < columns; column++)
             {
-                Console.WriteLine($"col {column}: {rowData[row][column]}");
-                cells[column, row] = rowData[row][column] == 'X';
+                cellAction(column, row);
             }
+
+            endOfRowAction();
         }
     }
+
+    private void ForEveryCell(Action<int, int> action) => ForEveryCellAndRow(action, () => { });
 
     public bool IsAliveAt(int column, int row)
     {
@@ -56,14 +60,7 @@ public class Grid
     public Grid NextGeneration()
     {
         var next = new Grid(columns, rows);
-        for (var row = 0; row < rows; row++)
-        {
-            for (var column = 0; column < columns; column++)
-            {
-                next.cells[column, row] = WillLiveAt(column, row);
-            }
-        }
-
+        ForEveryCell((column, row) => next.cells[column, row] = WillLiveAt(column, row));
         return next;
     }
 
@@ -103,16 +100,7 @@ public class Grid
     public override string ToString()
     {
         var builder = new StringBuilder((columns + 1) * rows);
-        for (var row = 0; row < rows; row++)
-        {
-            for (var column = 0; column < columns; column++)
-            {
-                builder.Append(IsAliveAt(column, row) ? "X" : ".");
-            }
-
-            builder.Append("\n");
-        }
+        ForEveryCellAndRow((column, row) => builder.Append(IsAliveAt(column, row) ? "X" : "."), () => builder.Append("\n"));
         return builder.ToString();
     }
-    
 }
