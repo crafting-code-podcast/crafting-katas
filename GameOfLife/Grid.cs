@@ -56,6 +56,12 @@ public class Grid
         {
             return true;
         }
+
+        if (!IsAliveAt(column, row) && liveNeighbors == 3)
+        {
+            return true;
+        }
+        
         return false;
     }
 

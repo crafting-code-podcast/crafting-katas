@@ -110,8 +110,7 @@ public class Tests
     [TestCase("0,0;0,2")]
     [TestCase("0,0;0,1")]
     [TestCase("1,0;2,2")]
-    [TestCase("1,0;2,2;2,1")]
-    public void When_a_dead_cell_has_two_or_three_neighbors_it_stays_dead(string neighbors)
+    public void When_a_dead_cell_has_two_neighbors_it_stays_dead(string neighbors)
     {
         var grid = new Grid(3, 3);
         SetLiveCellsFromStringCoordinates(grid, neighbors);
@@ -127,6 +126,37 @@ public class Tests
     {
         var grid = new Grid(3, 3);
         grid.SetLiveCell(1, 1);
+        SetLiveCellsFromStringCoordinates(grid, neighbors);
+
+        var result = grid.NextGeneration();
+        
+        Assert.That(result.IsAliveAt(1, 1), Is.False);
+    }
+
+    [TestCase("0,0;0,1;0,2")]
+    [TestCase("2,0;0,1;2,2")]
+    [TestCase("1,0;0,1;2,2")]
+    public void When_a_dead_cell_has_exactly_3_live_neighbors_it_lives(string neighbors)
+    {
+        var grid = new Grid(3, 3);
+        SetLiveCellsFromStringCoordinates(grid, neighbors);
+
+        var result = grid.NextGeneration();
+        
+        Assert.That(result.IsAliveAt(1, 1), Is.True);
+    }
+    
+    [TestCase("")]
+    [TestCase("0,2")]
+    [TestCase("2,0;2,2")]
+    [TestCase("1,0;0,1;2,2;0,0")]
+    [TestCase("0,0;0,1;0,2;1,0;1,2")]
+    [TestCase("0,0;0,1;0,2;1,0;1,2;2,0")]
+    [TestCase("0,0;0,1;0,2;1,0;1,2;2,0;2,1")]
+    [TestCase("0,0;0,1;0,2;1,0;1,2;2,0;2,1;2,2")]
+    public void When_a_dead_cell_has_other_than_3_neighbors_it_stays_dead(string neighbors)
+    {
+        var grid = new Grid(3, 3);
         SetLiveCellsFromStringCoordinates(grid, neighbors);
 
         var result = grid.NextGeneration();
