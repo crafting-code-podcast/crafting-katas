@@ -67,11 +67,22 @@ public class InfiniteGrid
     public InfiniteGrid NextGeneration()
     {
         var next = new InfiniteGrid();
-        Console.WriteLine(this);
         liveCells.ForEach(cell =>
         {
             var liveNeighbors = LiveNeighborCount(cell);
             if (liveNeighbors == 2 || liveNeighbors == 3)
+            {
+                next.SetLiveCell(cell.column, cell.row);
+            }
+        });
+        var deadNeighbors = liveCells.SelectMany(GetAllNeighbors)
+            .Distinct()
+            .Where(cell => !liveCells.Contains(cell))
+            .ToList();
+        deadNeighbors.ForEach(cell =>
+        {
+            var liveNeighbors = LiveNeighborCount(cell);
+            if (liveNeighbors == 3)
             {
                 next.SetLiveCell(cell.column, cell.row);
             }
@@ -90,6 +101,19 @@ public class InfiniteGrid
         return columnDistance == 1 && rowDistance < 2 ||
                columnDistance < 2 && rowDistance == 1;
     }
-        
-        
+
+    private List<(int column, int row)> GetAllNeighbors((int column, int row) cell)
+    {
+        return new List<(int, int)>
+        {
+            (cell.column - 1, cell.row - 1),
+            (cell.column - 1, cell.row),
+            (cell.column - 1, cell.row + 1),
+            (cell.column, cell.row - 1),
+            (cell.column, cell.row + 1),
+            (cell.column + 1, cell.row - 1),
+            (cell.column + 1, cell.row),
+            (cell.column + 1, cell.row + 1),
+        };
+    }
 }

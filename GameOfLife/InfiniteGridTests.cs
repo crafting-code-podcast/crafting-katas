@@ -98,4 +98,34 @@ public class InfiniteGridTests
         
         Assert.That(result.IsAliveAt(1, 1), Is.False);
     }
+    
+    [TestCase("X..\nX..\nX..\n")]
+    [TestCase("..X\nX..\n..X\n")]
+    [TestCase(".X.\nX..\n..X\n")]
+    public void When_a_dead_cell_has_exactly_3_live_neighbors_it_lives(string input)
+    {
+        var grid = new InfiniteGrid(input);
+        
+        var result = grid.NextGeneration();
+        
+        Assert.That(result.IsAliveAt(1, 1), Is.True);
+    }
+    
+    [TestCase("...\n...\n...\n")]
+    [TestCase("..X\n...\n...\n")]
+    [TestCase("..X\n...\n..X\n")]
+    [TestCase("XX.\nX..\n..X\n")]
+    [TestCase("...\n...\n...\n")]
+    [TestCase("XX.\nX..\nXX.\n")]
+    [TestCase("XXX\nX..\nXX.\n")]
+    [TestCase("XXX\nX.X\nXX.\n")]
+    [TestCase("XXX\nX.X\nXXX\n")]
+    public void When_a_dead_cell_has_other_than_3_neighbors_it_stays_dead(string input)
+    {
+        var grid = new InfiniteGrid(input);
+        
+        var result = grid.NextGeneration();
+        
+        Assert.That(result.IsAliveAt(1, 1), Is.False);
+    }
 }
