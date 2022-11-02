@@ -1,4 +1,3 @@
-using System.Linq;
 using NUnit.Framework;
 
 namespace GameOfLife;
@@ -46,38 +45,6 @@ public class Tests
     }
 
     [Test]
-    public void When_setting_live_cells_from_coordinates()
-    {
-        var grid = new Grid(3, 3);
-        var coordinates = "0,0;2,2;0,2;1,2";
-        
-        SetLiveCellsFromStringCoordinates(grid, coordinates);
-        
-        Assert.That(grid.IsAliveAt(0, 0), Is.True);
-        Assert.That(grid.IsAliveAt(0, 1), Is.False);
-        Assert.That(grid.IsAliveAt(0, 2), Is.True);
-        Assert.That(grid.IsAliveAt(1, 0), Is.False);
-        Assert.That(grid.IsAliveAt(1, 1), Is.False);
-        Assert.That(grid.IsAliveAt(1, 2), Is.True);
-        Assert.That(grid.IsAliveAt(2, 0), Is.False);
-        Assert.That(grid.IsAliveAt(2, 1), Is.False);
-        Assert.That(grid.IsAliveAt(2, 2), Is.True);
-    }
-
-    private void SetLiveCellsFromStringCoordinates(Grid grid, string coordinates)
-    {
-        if (string.IsNullOrEmpty(coordinates))
-        {
-            return;
-        }
-        
-        coordinates.Split(";")
-            .Select(x => x.Split(",").Select(x => int.Parse(x)).ToList())
-            .ToList()
-            .ForEach(cell => grid.SetLiveCell(cell[0], cell[1]));
-    }
-
-    [Test]
     public void When_converting_a_grid_to_string()
     {
         var grid = new Grid(3, 3);
@@ -107,75 +74,68 @@ public class Tests
         Assert.That(grid.IsAliveAt(2, 2), Is.False);
     }
 
-    [TestCase("")]
-    [TestCase("0,0")]
-    [TestCase("0,1")]
-    [TestCase("2,2")]
-    public void When_a_live_cell_has_less_than_two_neighbors_it_dies(string neighbors)
+    [TestCase("...\n.X.\n...\n")]
+    [TestCase("X..\n.X.\n...\n")]
+    [TestCase("...\nXX.\n...\n")]
+    [TestCase("...\n.X.\n..X\n")]
+    public void When_a_live_cell_has_less_than_two_neighbors_it_dies(string input)
     {
-        var grid = new Grid(3, 3);
-        grid.SetLiveCell(1, 1);
-        SetLiveCellsFromStringCoordinates(grid, neighbors);
+        var grid = new Grid(input);
 
         var result = grid.NextGeneration();
 
         Assert.That(result.IsAliveAt(1, 1), Is.False);
     }
 
-    [TestCase("0,0;0,2")]
-    [TestCase("0,0;0,1")]
-    [TestCase("1,0;2,2")]
-    [TestCase("1,0;2,2;2,1")]
-    public void When_a_live_cell_has_two_or_three_neighbors_it_lives(string neighbors)
+    [TestCase("X.X\n.X.\n...\n")]
+    [TestCase("X..\nXX.\n...\n")]
+    [TestCase(".X.\n.X.\n..X\n")]
+    [TestCase(".X.\n.XX\n..X\n")]
+    public void When_a_live_cell_has_two_or_three_neighbors_it_lives(string input)
     {
-        var grid = new Grid(3, 3);
-        grid.SetLiveCell(1, 1);
-        SetLiveCellsFromStringCoordinates(grid, neighbors);
-
+        var grid = new Grid(input);
+        
         var result = grid.NextGeneration();
         
         Assert.That(result.IsAliveAt(1, 1), Is.True);
     }
     
-    [TestCase("1,0;2,2;2,1;0,0")]
-    [TestCase("0,0;0,1;0,2;1,0")]
-    public void When_a_live_cell_has_more_than_three_neighbors_it_dies(string neighbors)
+    [TestCase("XX.\n.XX\n..X\n")]
+    [TestCase("XX.\nXX.\nX..\n")]
+    public void When_a_live_cell_has_more_than_three_neighbors_it_dies(string input)
     {
-        var grid = new Grid(3, 3);
-        grid.SetLiveCell(1, 1);
-        SetLiveCellsFromStringCoordinates(grid, neighbors);
-
+        var grid = new Grid(input);
+        
         var result = grid.NextGeneration();
         
         Assert.That(result.IsAliveAt(1, 1), Is.False);
     }
 
-    [TestCase("0,0;0,1;0,2")]
-    [TestCase("2,0;0,1;2,2")]
-    [TestCase("1,0;0,1;2,2")]
-    public void When_a_dead_cell_has_exactly_3_live_neighbors_it_lives(string neighbors)
+    [TestCase("X..\nXX.\nX..\n")]
+    [TestCase("..X\nXX.\n..X\n")]
+    [TestCase(".X.\nXX.\n..X\n")]
+    public void When_a_dead_cell_has_exactly_3_live_neighbors_it_lives(string input)
     {
-        var grid = new Grid(3, 3);
-        SetLiveCellsFromStringCoordinates(grid, neighbors);
-
+        var grid = new Grid(input);
+        
         var result = grid.NextGeneration();
         
         Assert.That(result.IsAliveAt(1, 1), Is.True);
     }
     
-    [TestCase("")]
-    [TestCase("0,2")]
-    [TestCase("2,0;2,2")]
-    [TestCase("1,0;0,1;2,2;0,0")]
-    [TestCase("0,0;0,1;0,2;1,0;1,2")]
-    [TestCase("0,0;0,1;0,2;1,0;1,2;2,0")]
-    [TestCase("0,0;0,1;0,2;1,0;1,2;2,0;2,1")]
-    [TestCase("0,0;0,1;0,2;1,0;1,2;2,0;2,1;2,2")]
-    public void When_a_dead_cell_has_other_than_3_neighbors_it_stays_dead(string neighbors)
+    [TestCase("...\n...\n...\n")]
+    [TestCase("..X\n...\n...\n")]
+    [TestCase("..X\n...\n..X\n")]
+    [TestCase("XX.\nX..\n..X\n")]
+    [TestCase("...\n...\n...\n")]
+    [TestCase("XX.\nX..\nXX.\n")]
+    [TestCase("XXX\nX..\nXX.\n")]
+    [TestCase("XXX\nX.X\nXX.\n")]
+    [TestCase("XXX\nX.X\nXXX\n")]
+    public void When_a_dead_cell_has_other_than_3_neighbors_it_stays_dead(string input)
     {
-        var grid = new Grid(3, 3);
-        SetLiveCellsFromStringCoordinates(grid, neighbors);
-
+        var grid = new Grid(input);
+        
         var result = grid.NextGeneration();
         
         Assert.That(result.IsAliveAt(1, 1), Is.False);
@@ -184,70 +144,20 @@ public class Tests
     [Test]
     public void When_testing_a_block()
     {
-        var grid = new Grid(4, 4);
-        SetLiveCellsFromStringCoordinates(grid, "1,1;1,2;2,1;2,2");
+        var blockInput = "....\n.XX.\n.XX.\n....\n";
 
-        var result = grid.NextGeneration();
+        var result = new Grid(blockInput).NextGeneration().ToString();
         
-        Assert.That(result.IsAliveAt(0,0), Is.False);
-        Assert.That(result.IsAliveAt(0,1), Is.False);
-        Assert.That(result.IsAliveAt(0,2), Is.False);
-        Assert.That(result.IsAliveAt(0,3), Is.False);
-        Assert.That(result.IsAliveAt(1,0), Is.False);
-        Assert.That(result.IsAliveAt(1,1), Is.True);
-        Assert.That(result.IsAliveAt(1,2), Is.True);
-        Assert.That(result.IsAliveAt(1,3), Is.False);
-        Assert.That(result.IsAliveAt(2,0), Is.False);
-        Assert.That(result.IsAliveAt(2,1), Is.True);
-        Assert.That(result.IsAliveAt(2,2), Is.True);
-        Assert.That(result.IsAliveAt(2,3), Is.False);
-        Assert.That(result.IsAliveAt(3,0), Is.False);
-        Assert.That(result.IsAliveAt(3,1), Is.False);
-        Assert.That(result.IsAliveAt(3,2), Is.False);
-        Assert.That(result.IsAliveAt(3,3), Is.False);
+        Assert.That(result, Is.EqualTo(blockInput));
     }
 
     [Test]
     public void When_testing_a_beehive()
     {
-        var grid = new Grid(6, 5);
-        SetLiveCellsFromStringCoordinates(grid, "2,1;3,1;1,2;4,2;2,3;3,3");
+        var beehiveInput = "......\n..XX..\n.X..X.\n..XX..\n......\n";
+
+        var result = new Grid(beehiveInput).NextGeneration().ToString();
         
-        var result = grid.NextGeneration();
-        
-        Assert.That(result.IsAliveAt(0,0), Is.False);
-        Assert.That(result.IsAliveAt(1,0), Is.False);
-        Assert.That(result.IsAliveAt(2,0), Is.False);
-        Assert.That(result.IsAliveAt(3,0), Is.False);
-        Assert.That(result.IsAliveAt(4,0), Is.False);
-        Assert.That(result.IsAliveAt(5,0), Is.False);
-        
-        Assert.That(result.IsAliveAt(0,1), Is.False);
-        Assert.That(result.IsAliveAt(1,1), Is.False);
-        Assert.That(result.IsAliveAt(2,1), Is.True);
-        Assert.That(result.IsAliveAt(3,1), Is.True);
-        Assert.That(result.IsAliveAt(4,1), Is.False);
-        Assert.That(result.IsAliveAt(5,1), Is.False);
-        
-        Assert.That(result.IsAliveAt(0,2), Is.False);
-        Assert.That(result.IsAliveAt(1,2), Is.True);
-        Assert.That(result.IsAliveAt(2,2), Is.False);
-        Assert.That(result.IsAliveAt(3,2), Is.False);
-        Assert.That(result.IsAliveAt(4,2), Is.True);
-        Assert.That(result.IsAliveAt(5,2), Is.False);
-        
-        Assert.That(result.IsAliveAt(0,3), Is.False);
-        Assert.That(result.IsAliveAt(1,3), Is.False);
-        Assert.That(result.IsAliveAt(2,3), Is.True);
-        Assert.That(result.IsAliveAt(3,3), Is.True);
-        Assert.That(result.IsAliveAt(4,3), Is.False);
-        Assert.That(result.IsAliveAt(5,3), Is.False);
-        
-        Assert.That(result.IsAliveAt(0,4), Is.False);
-        Assert.That(result.IsAliveAt(1,4), Is.False);
-        Assert.That(result.IsAliveAt(2,4), Is.False);
-        Assert.That(result.IsAliveAt(3,4), Is.False);
-        Assert.That(result.IsAliveAt(4,4), Is.False);
-        Assert.That(result.IsAliveAt(5,4), Is.False);
+        Assert.That(result, Is.EqualTo(beehiveInput));
     }
 }
