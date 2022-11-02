@@ -150,4 +150,74 @@ public class Tests
         
         Assert.That(result.IsAliveAt(1, 1), Is.False);
     }
+
+    [Test]
+    public void When_testing_a_block()
+    {
+        var grid = new Grid(4, 4);
+        SetLiveCellsFromStringCoordinates(grid, "1,1;1,2;2,1;2,2");
+
+        var result = grid.NextGeneration();
+        
+        Assert.That(result.IsAliveAt(0,0), Is.False);
+        Assert.That(result.IsAliveAt(0,1), Is.False);
+        Assert.That(result.IsAliveAt(0,2), Is.False);
+        Assert.That(result.IsAliveAt(0,3), Is.False);
+        Assert.That(result.IsAliveAt(1,0), Is.False);
+        Assert.That(result.IsAliveAt(1,1), Is.True);
+        Assert.That(result.IsAliveAt(1,2), Is.True);
+        Assert.That(result.IsAliveAt(1,3), Is.False);
+        Assert.That(result.IsAliveAt(2,0), Is.False);
+        Assert.That(result.IsAliveAt(2,1), Is.True);
+        Assert.That(result.IsAliveAt(2,2), Is.True);
+        Assert.That(result.IsAliveAt(2,3), Is.False);
+        Assert.That(result.IsAliveAt(3,0), Is.False);
+        Assert.That(result.IsAliveAt(3,1), Is.False);
+        Assert.That(result.IsAliveAt(3,2), Is.False);
+        Assert.That(result.IsAliveAt(3,3), Is.False);
+    }
+
+    [Test]
+    public void When_testing_a_beehive()
+    {
+        var grid = new Grid(6, 5);
+        SetLiveCellsFromStringCoordinates(grid, "2,1;3,1;1,2;4,2;2,3;3,3");
+        
+        var result = grid.NextGeneration();
+        
+        Assert.That(result.IsAliveAt(0,0), Is.False);
+        Assert.That(result.IsAliveAt(1,0), Is.False);
+        Assert.That(result.IsAliveAt(2,0), Is.False);
+        Assert.That(result.IsAliveAt(3,0), Is.False);
+        Assert.That(result.IsAliveAt(4,0), Is.False);
+        Assert.That(result.IsAliveAt(5,0), Is.False);
+        
+        Assert.That(result.IsAliveAt(0,1), Is.False);
+        Assert.That(result.IsAliveAt(1,1), Is.False);
+        Assert.That(result.IsAliveAt(2,1), Is.True);
+        Assert.That(result.IsAliveAt(3,1), Is.True);
+        Assert.That(result.IsAliveAt(4,1), Is.False);
+        Assert.That(result.IsAliveAt(5,1), Is.False);
+        
+        Assert.That(result.IsAliveAt(0,2), Is.False);
+        Assert.That(result.IsAliveAt(1,2), Is.True);
+        Assert.That(result.IsAliveAt(2,2), Is.False);
+        Assert.That(result.IsAliveAt(3,2), Is.False);
+        Assert.That(result.IsAliveAt(4,2), Is.True);
+        Assert.That(result.IsAliveAt(5,2), Is.False);
+        
+        Assert.That(result.IsAliveAt(0,3), Is.False);
+        Assert.That(result.IsAliveAt(1,3), Is.False);
+        Assert.That(result.IsAliveAt(2,3), Is.True);
+        Assert.That(result.IsAliveAt(3,3), Is.True);
+        Assert.That(result.IsAliveAt(4,3), Is.False);
+        Assert.That(result.IsAliveAt(5,3), Is.False);
+        
+        Assert.That(result.IsAliveAt(0,4), Is.False);
+        Assert.That(result.IsAliveAt(1,4), Is.False);
+        Assert.That(result.IsAliveAt(2,4), Is.False);
+        Assert.That(result.IsAliveAt(3,4), Is.False);
+        Assert.That(result.IsAliveAt(4,4), Is.False);
+        Assert.That(result.IsAliveAt(5,4), Is.False);
+    }
 }
