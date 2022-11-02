@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace GameOfLife;
 
@@ -14,6 +16,26 @@ public class Grid
         this.columns = columns;
         this.rows = rows;
         cells = new bool[columns, rows];
+    }
+
+    public Grid(string input)
+    {
+        var rowData = input.Trim().Split("\n");
+        rows = rowData.Length;
+        columns = rowData[0].Length;
+        cells = new bool[columns, rows];
+
+        Console.WriteLine(input);
+
+        for (var row = 0; row < rows; row++)
+        {
+            Console.WriteLine($"row {row}: {rowData[row]}");
+            for (var column = 0; column < columns; column++)
+            {
+                Console.WriteLine($"col {column}: {rowData[row][column]}");
+                cells[column, row] = rowData[row][column] == 'X';
+            }
+        }
     }
 
     public bool IsAliveAt(int column, int row)
@@ -77,4 +99,20 @@ public class Grid
         .Select(x => IsAliveAt(x.column, x.row) ? 1 : 0)
         .Sum();
     }
+
+    public override string ToString()
+    {
+        var builder = new StringBuilder((columns + 1) * rows);
+        for (var row = 0; row < rows; row++)
+        {
+            for (var column = 0; column < columns; column++)
+            {
+                builder.Append(IsAliveAt(column, row) ? "X" : ".");
+            }
+
+            builder.Append("\n");
+        }
+        return builder.ToString();
+    }
+    
 }

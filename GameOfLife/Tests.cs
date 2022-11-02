@@ -77,6 +77,36 @@ public class Tests
             .ForEach(cell => grid.SetLiveCell(cell[0], cell[1]));
     }
 
+    [Test]
+    public void When_converting_a_grid_to_string()
+    {
+        var grid = new Grid(3, 3);
+        grid.SetLiveCell(0, 0);
+        grid.SetLiveCell(1, 2);
+        grid.SetLiveCell(1, 0);
+        grid.SetLiveCell(2, 1);
+
+        var result = grid.ToString();
+        
+        Assert.That(result, Is.EqualTo("XX.\n..X\n.X.\n"));
+    }
+
+    [Test]
+    public void When_creating_a_grid_from_a_string()
+    {
+        var grid = new Grid("XX.\n..X\n.X.\n");
+        
+        Assert.That(grid.IsAliveAt(0, 0), Is.True);
+        Assert.That(grid.IsAliveAt(1, 0), Is.True);
+        Assert.That(grid.IsAliveAt(2, 0), Is.False);
+        Assert.That(grid.IsAliveAt(0, 1), Is.False);
+        Assert.That(grid.IsAliveAt(1, 1), Is.False);
+        Assert.That(grid.IsAliveAt(2, 1), Is.True);
+        Assert.That(grid.IsAliveAt(0, 2), Is.False);
+        Assert.That(grid.IsAliveAt(1, 2), Is.True);
+        Assert.That(grid.IsAliveAt(2, 2), Is.False);
+    }
+
     [TestCase("")]
     [TestCase("0,0")]
     [TestCase("0,1")]
