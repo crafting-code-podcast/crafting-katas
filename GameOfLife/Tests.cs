@@ -160,4 +160,61 @@ public class Tests
         
         Assert.That(result, Is.EqualTo(beehiveInput));
     }
+    
+    [Test]
+    public void When_testing_a_boat()
+    {
+        var boatInput = ".....\n.XX..\n.X.X.\n..X..\n.....\n";
+
+        var result = new Grid(boatInput).NextGeneration().ToString();
+        
+        Assert.That(result, Is.EqualTo(boatInput));
+    }
+    
+    [Test]
+    public void When_testing_a_blinker()
+    {
+        var blinkerInput = ".....\n.....\n.XXX.\n.....\n.....\n";
+        var grid = new Grid(blinkerInput);
+
+        var result1 = grid.NextGeneration().ToString();
+        var result2 = grid.NextGeneration().NextGeneration().ToString();
+        
+        Assert.That(result1, Is.EqualTo(".....\n..X..\n..X..\n..X..\n.....\n"));
+        Assert.That(result2, Is.EqualTo(blinkerInput));
+    }
+    
+    [Test]
+    public void When_testing_a_toad()
+    {
+        var toadInput = "......\n......\n..XXX.\n.XXX..\n......\n......\n";
+        var grid = new Grid(toadInput);
+
+        var result1 = grid.NextGeneration().ToString();
+        var result2 = grid.NextGeneration().NextGeneration().ToString();
+        
+        Assert.That(result1, Is.EqualTo("......\n...X..\n.X..X.\n.X..X.\n..X...\n......\n"));
+        Assert.That(result2, Is.EqualTo(toadInput));
+    }
+    
+    [Test]
+    public void When_testing_a_glider()
+    {
+        var grid = new Grid(".X...\n..X..\nXXX..\n.....\n.....\n.....\n");
+
+        grid = grid.NextGeneration();
+        Assert.That(grid.ToString(), Is.EqualTo(".....\nX.X..\n.XX..\n.X...\n.....\n.....\n"));
+
+        grid = grid.NextGeneration();
+        Assert.That(grid.ToString(), Is.EqualTo(".....\n..X..\nX.X..\n.XX..\n.....\n.....\n"));
+        
+        grid = grid.NextGeneration();
+        Assert.That(grid.ToString(), Is.EqualTo(".....\n.X...\n..XX.\n.XX..\n.....\n.....\n"));
+        
+        grid = grid.NextGeneration();
+        Assert.That(grid.ToString(), Is.EqualTo(".....\n..X..\n...X.\n.XXX.\n.....\n.....\n"));
+        
+        grid = grid.NextGeneration();
+        Assert.That(grid.ToString(), Is.EqualTo(".....\n.....\n.X.X.\n..XX.\n..X..\n.....\n"));
+    }
 }
