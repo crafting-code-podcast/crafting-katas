@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -65,6 +66,30 @@ public class InfiniteGrid
 
     public InfiniteGrid NextGeneration()
     {
-        return new InfiniteGrid();
+        var next = new InfiniteGrid();
+        Console.WriteLine(this);
+        liveCells.ForEach(cell =>
+        {
+            var liveNeighbors = LiveNeighborCount(cell);
+            if (liveNeighbors == 2 || liveNeighbors == 3)
+            {
+                next.SetLiveCell(cell.column, cell.row);
+            }
+        });
+        return next;
     }
+
+    private int LiveNeighborCount((int column, int row) cell) =>
+        liveCells.Count(otherCell => IsNeighbor(cell, otherCell));
+
+    private bool IsNeighbor((int column, int row) cell, (int column, int row) otherCell)
+    {
+        var columnDistance = Math.Abs(cell.column - otherCell.column);
+        var rowDistance = Math.Abs(cell.row - otherCell.row);
+
+        return columnDistance == 1 && rowDistance < 2 ||
+               columnDistance < 2 && rowDistance == 1;
+    }
+        
+        
 }
