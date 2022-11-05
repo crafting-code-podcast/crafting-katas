@@ -1,6 +1,11 @@
 namespace GameOfLife;
 
-public class Rules
+public interface IRules
+{
+    Status NextState(Status currentStatus, int livingNeighbors);
+}
+
+public class Rules : IRules
 {
     public Status NextState(Status currentStatus, int livingNeighbors)
     {
