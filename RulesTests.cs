@@ -1,6 +1,4 @@
-using System.Security.Cryptography.X509Certificates;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 
 namespace GameOfLife;
 
@@ -33,26 +31,4 @@ public class RulesTests
     {
         Assert.That(new Rules().NextState(Status.Dead, livingNeighbors), Is.EqualTo(expected));
     }
-}
-
-public class Rules
-{
-    public Status NextState(Status currentStatus, int livingNeighbors)
-    {
-        if (livingNeighbors == 3)
-        {
-            return Status.Alive;
-        }
-        if (currentStatus == Status.Alive && livingNeighbors == 2)
-        {
-            return Status.Alive;
-        }
-        return Status.Dead;
-    }
-}
-
-public enum Status
-{
-    Alive,
-    Dead
 }
