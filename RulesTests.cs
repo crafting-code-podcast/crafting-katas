@@ -19,13 +19,31 @@ public class RulesTests
     {
         Assert.That(new Rules().NextState(Status.Alive, livingNeighbors), Is.EqualTo(expected));
     }
+
+    [TestCase(0, Status.Dead)]
+    [TestCase(1, Status.Dead)]
+    [TestCase(2, Status.Dead)]
+    [TestCase(3, Status.Alive)]
+    [TestCase(4, Status.Dead)]
+    [TestCase(5, Status.Dead)]
+    [TestCase(6, Status.Dead)]
+    [TestCase(7, Status.Dead)]
+    [TestCase(8, Status.Dead)]
+    public void Dead_cell_next_status_tests(int livingNeighbors, Status expected)
+    {
+        Assert.That(new Rules().NextState(Status.Dead, livingNeighbors), Is.EqualTo(expected));
+    }
 }
 
 public class Rules
 {
     public Status NextState(Status currentStatus, int livingNeighbors)
     {
-        if (livingNeighbors == 2 || livingNeighbors == 3)
+        if (livingNeighbors == 3)
+        {
+            return Status.Alive;
+        }
+        if (currentStatus == Status.Alive && livingNeighbors == 2)
         {
             return Status.Alive;
         }
