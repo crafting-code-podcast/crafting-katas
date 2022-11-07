@@ -8,8 +8,11 @@ const (
 )
 
 func NextState(c CellState, n int64) CellState {
-	if n == 2 || n == 3 {
+	if n == 3 {
 		return Alive
+	}
+	if n == 2 {
+		return c
 	}
 	return Dead
 }
