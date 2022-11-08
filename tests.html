@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <title>Game of Life Tests</title>
+        <script src="tests.js"></script>
+        <style>
+            body {
+                font-family: monospace;
+            }
+
+            #tests {
+                padding: 10px;
+            }
+
+            #tests > div {
+                margin: 0 0 10px 0;
+                padding: 10px;
+            }
+
+            p {
+                margin: 0;
+            }
+
+            .success {
+                border: 1px solid green;
+                background-color: lightgreen;
+            }
+
+            .failure {
+                border: 1px solid red;
+                background-color: pink;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Game of Life Tests</h1>
+        <div id="tests"></div>
+        <script>runAllTests()</script>
+    </body>
+</html>
