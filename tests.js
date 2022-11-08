@@ -2,6 +2,7 @@ const tests = []
 
 const runAllTests = () => {
     const container = document.getElementById("tests")
+    let totalFailures = 0
     tests.forEach(test => {
         const result = runTest(test.action)
 
@@ -13,6 +14,7 @@ const runAllTests = () => {
         div.appendChild(testName)
 
         if (!result.success) {
+            totalFailures++
             const errorDiv = document.createElement('div')
             errorDiv.innerHTML = result.error
             div.appendChild(errorDiv)
@@ -20,6 +22,8 @@ const runAllTests = () => {
 
         container.appendChild(div)
     })
+
+    document.getElementById("totals").innerHTML = `Ran ${tests.length} tests and got ${totalFailures} failures`
 }
 
 const runTest = (action) => {
