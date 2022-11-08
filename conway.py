@@ -283,8 +283,6 @@ def generate(grid):
             neighbors.append(get_bottom_left_neighbor_state(grid, row, cell))
             neighbors.append(get_left_neighbor_state(grid, row, cell))
 
-            print(row,cell,neighbors)
-
             next_generation[row][cell] = get_cell_state(grid[row][cell], neighbors)
 
     return next_generation
