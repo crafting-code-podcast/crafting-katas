@@ -1,0 +1,51 @@
+<html>
+    <head>
+        <title>Game of Life</title>
+        <script src="game-of-life.js"></script>
+        <style>
+            body {
+                font-family: monospace;
+            }
+
+            canvas {
+                border: 1px solid black;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Game of Life</h1>
+        <canvas id="game" width="800" height="600"></canvas>
+        <script>
+            const width = 800
+            const height = 600
+            const cellSize = 10
+            const columns = Math.floor(width / cellSize)
+            const rows = Math.floor(height / cellSize)
+            const canvas = document.getElementById("game").getContext('2d')
+
+            const randomInt = (min, max) => Math.floor(Math.random() * (max - min) + min) 
+
+            const drawCell = (cell) => {
+                canvas.fillRect(cell.column * cellSize, cell.row * cellSize, cellSize - 1, cellSize - 1)
+            }
+
+            const paint = () => {
+                canvas.clearRect(0, 0, width, height)
+                grid.forEach(drawCell)
+            }
+
+            let grid = setLiveCells(
+                createNewGrid(),
+                new Array(randomInt(300, 700))
+                    .fill(0)
+                    .map(x => createLiveCell(randomInt(0, columns), randomInt(0, rows)))
+                )
+
+            paint()
+            setInterval(() => {
+                grid = getNextGeneration(grid, 0, 0, columns, rows)
+                paint()
+            }, 1000)
+        </script>
+    </body>
+</html>
