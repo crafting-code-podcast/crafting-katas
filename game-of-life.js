@@ -12,7 +12,15 @@ const createNewGrid = () => []
 
 const createLiveCell = (column, row) => ({column, row})
 
-const setLiveCells = (grid, cells) => grid.concat(cells)
+const setLiveCells = (grid, cells) => {
+    const deduped = []
+    grid.concat(cells).forEach(x => {
+        if (!deduped.some(y => y.column == x.column && y.row == x.row)) {
+            deduped.push(x)
+        }
+    })
+    return deduped
+}
 
 const getLiveNeighborCount = (grid, column, row) => grid.filter(cell => {
     const columnDelta = Math.abs(cell.column - column)

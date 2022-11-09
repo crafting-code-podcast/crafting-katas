@@ -106,6 +106,23 @@ test('when setting live cells', () => {
     assert(newGrid).deepEquals([])
 })
 
+test('when setting live cells duplicates are handled', () => {
+    const newGrid = createNewGrid();
+    const cells = [
+        createLiveCell(0, 0),
+        createLiveCell(1, 4),
+        createLiveCell(0, 0),
+        createLiveCell(1, 4),
+        createLiveCell(1, 4)
+    ]
+    const expected = [
+        {column: 0, row: 0},
+        {column: 1, row: 4}
+    ]
+
+    assert(setLiveCells(newGrid, cells)).deepEquals(expected)
+})
+
 Array.from([
     {column: 70, row: 80, expect: 0},
     {column: -5, row: -5, expect: 0},
@@ -123,7 +140,7 @@ Array.from([
         createLiveCell(4, 5),
         createLiveCell(5, 4),
         createLiveCell(4, 4),
-        createLiveCell(4, 5),
+        createLiveCell(4, 6),
         createLiveCell(6, 5)
     ])
 
@@ -159,10 +176,10 @@ test('when calculating the next generation in a 3x3 grid', () => {
     const grid = setLiveCells(createNewGrid(), cellBlock)
 
     assert(getNextGeneration(grid, -1, -1, 3, 3)).deepEquals([
-        { "column": -1, "row": -1 },
-        { "column": 1, "row": -1 },
-        { "column": -1, "row": 1 },
-        { "column": 1, "row": 1 }
+        { column: -1, row: -1 },
+        { column: 1, row: -1 },
+        { column: -1, row: 1 },
+        { column: 1, row: 1 }
     ])
 })
 
@@ -170,13 +187,13 @@ test('when calculating the next generation in a 5x5 grid', () => {
     const grid = setLiveCells(createNewGrid(), cellBlock)
 
     assert(getNextGeneration(grid, -2, -2, 5, 5)).deepEquals([
-        { column: 0, row: -2},
+        { column: 0, row: -2 },
         { column: -1, row: -1 },
         { column: 1, row: -1 },
-        { column: -2, row: 0},
-        { column: 2, row: 0},
+        { column: -2, row: 0 },
+        { column: 2, row: 0 },
         { column: -1, row: 1 },
         { column: 1, row: 1 },
-        { column: 0, row: 2}
+        { column: 0, row: 2 }
     ])
 })
