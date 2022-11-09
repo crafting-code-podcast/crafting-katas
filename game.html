@@ -16,36 +16,39 @@
         <h1>Game of Life</h1>
         <canvas id="game" width="800" height="600"></canvas>
         <script>
-            const width = 800
-            const height = 600
+            const canvas = document.getElementById("game")
+            const context = canvas.getContext('2d')
             const cellSize = 10
-            const columns = Math.floor(width / cellSize)
-            const rows = Math.floor(height / cellSize)
-            const canvas = document.getElementById("game").getContext('2d')
-
+            const columns = Math.floor(canvas.width / cellSize)
+            const rows = Math.floor(canvas.height / cellSize)
+            
             const randomInt = (min, max) => Math.floor(Math.random() * (max - min) + min) 
 
             const drawCell = (cell) => {
-                canvas.fillRect(cell.column * cellSize, cell.row * cellSize, cellSize - 1, cellSize - 1)
+                context.fillRect(cell.column * cellSize, cell.row * cellSize, cellSize - 1, cellSize - 1)
             }
 
-            const paint = () => {
-                canvas.clearRect(0, 0, width, height)
+            const drawGrid = () => {
+                context.clearRect(0, 0, canvas.width, canvas.height)
                 grid.forEach(drawCell)
             }
 
-            let grid = setLiveCells(
+            const randomLiveCell = () => createLiveCell(randomInt(0, columns), randomInt(0, rows))
+            
+            const randomStartingGrid = () => setLiveCells(
                 createNewGrid(),
                 new Array(randomInt(300, 700))
                     .fill(0)
-                    .map(x => createLiveCell(randomInt(0, columns), randomInt(0, rows)))
-                )
+                    .map(randomLiveCell))
 
-            paint()
-            setInterval(() => {
+            const next = () => {
                 grid = getNextGeneration(grid, 0, 0, columns, rows)
-                paint()
-            }, 1000)
+                drawGrid()
+            }
+
+            let grid = randomStartingGrid()
+            drawGrid()
+            setInterval(next, 1000)
         </script>
     </body>
 </html>
