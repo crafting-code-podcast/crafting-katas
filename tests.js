@@ -129,3 +129,54 @@ Array.from([
 
     assert(getLiveNeighborCount(grid, x.column, x.row)).equals(x.expect)
 }))
+
+test('when checking if a cell is alive', () => {
+    const grid = setLiveCells(createNewGrid(), [
+        createLiveCell(0, 0),
+        createLiveCell(1, 1),
+        createLiveCell(1, 2)
+    ])
+
+    assert(isCellAlive(grid, 0, 0)).equals(true)
+    assert(isCellAlive(grid, 0, 1)).equals(false)
+    assert(isCellAlive(grid, 1, 1)).equals(true)
+    assert(isCellAlive(grid, -1, 1)).equals(false)
+})
+
+const cellBlock = [
+    createLiveCell(-1, -1),
+    createLiveCell(-1, 0),
+    createLiveCell(-1, 1),
+    createLiveCell(0, -1),
+    createLiveCell(0, 0),
+    createLiveCell(0, 1),
+    createLiveCell(1, -1),
+    createLiveCell(1, 0),
+    createLiveCell(1, 1),
+]
+
+test('when calculating the next generation in a 3x3 grid', () => {
+    const grid = setLiveCells(createNewGrid(), cellBlock)
+
+    assert(getNextGeneration(grid, -1, -1, 3, 3)).deepEquals([
+        { "column": -1, "row": -1 },
+        { "column": 1, "row": -1 },
+        { "column": -1, "row": 1 },
+        { "column": 1, "row": 1 }
+    ])
+})
+
+test('when calculating the next generation in a 5x5 grid', () => {
+    const grid = setLiveCells(createNewGrid(), cellBlock)
+
+    assert(getNextGeneration(grid, -2, -2, 5, 5)).deepEquals([
+        { column: 0, row: -2},
+        { column: -1, row: -1 },
+        { column: 1, row: -1 },
+        { column: -2, row: 0},
+        { column: 2, row: 0},
+        { column: -1, row: 1 },
+        { column: 1, row: 1 },
+        { column: 0, row: 2}
+    ])
+})
